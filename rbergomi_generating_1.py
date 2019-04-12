@@ -14,7 +14,7 @@ import logging
 
 logging.basicConfig(format="%(asctime)s - %(levelname)s - %(message)s", level=logging.INFO)
 
-part_id = 0
+part_id = 1
 part_size = 10000
 # part_size = 100
 
