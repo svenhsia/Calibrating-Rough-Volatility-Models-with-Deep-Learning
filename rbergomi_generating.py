@@ -17,7 +17,7 @@ logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(message)s", level=logging.INFO)
 
 
-def rBergomi_pricer(H, eta, rho, v0, tau, K, S0, MC_samples=40000):
+def rBergomi_pricer(H, eta, rho, v0, tau, K, S0, MC_samples=30000):
     """Computes European Call price under rBergomi dynamics with MC sampling.
 
     Parameters:
