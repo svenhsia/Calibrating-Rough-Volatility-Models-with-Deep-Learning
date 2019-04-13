@@ -15,7 +15,7 @@ tqdm.pandas()
 logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(message)s", level=logging.INFO)
 
-part_id = 15
+part_id = 19
 part_size = 10000
 # part_size = 100
 

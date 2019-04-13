@@ -1,4 +1,3 @@
-import logging
 import os
 import datetime
 import numpy as np
@@ -11,18 +10,17 @@ from rbergomi.rbergomi import rBergomi
 
 tqdm.pandas()
 
+import logging
 
-logging.basicConfig(
-    format="%(asctime)s - %(levelname)s - %(message)s", level=logging.INFO)
+logging.basicConfig(format="%(asctime)s - %(levelname)s - %(message)s", level=logging.INFO)
 
-part_id = 18
+part_id = 26
 part_size = 10000
 # part_size = 100
 
-
 def rBergomi_pricer(H, eta, rho, v0, tau, K, S0, MC_samples=40000):
     """Computes European Call price under rBergomi dynamics with MC sampling.
-
+    
     Parameters:
     -----------
         H: Hurst parameter
@@ -44,17 +42,15 @@ def rBergomi_pricer(H, eta, rho, v0, tau, K, S0, MC_samples=40000):
         price = np.mean(np.maximum(ST-K, 0))
     except:
         return np.nan, np.nan
-
+    
     # check numerical stability
     if price <= 0 or price + K < S0:
         iv = np.nan
-        logging.debug("NumStabProblem: Price {}. Intrinsic {}. Time {}. Strike {}.".format(
-            price, S0-K, tau, K))
+        logging.debug("NumStabProblem: Price {}. Intrinsic {}. Time {}. Strike {}.".format(price, S0-K, tau, K))
     else:
         logging.debug("Success: Price {} > intrinsic {}".format(price, S0-K))
         iv = implied_volatility(price, S0, K, tau, 0, 'c')
     return price, iv
-
 
 def generate_rBergomi_sample(K, T, param_generator, S0=1.0):
     counter = 0
@@ -77,10 +73,9 @@ def generate_rBergomi_sample(K, T, param_generator, S0=1.0):
     }
     return sample
 
-
-def param_generator(H_generator=truncnorm(-1.2, 8.6, 0.07, 0.05),
-                    eta_generator=truncnorm(-3, 3, 2.5, 0.5),
-                    rho_generator=truncnorm(-0.25, 2.25, -0.95, 0.2),
+def param_generator(H_generator=truncnorm(-1.2, 8.6, 0.07, 0.05), 
+                    eta_generator=truncnorm(-3, 3, 2.5, 0.5), 
+                    rho_generator=truncnorm(-0.25, 2.25, -0.95, 0.2), 
                     v0_generator=truncnorm(-2.5, 7, 0.3, 0.1)):
     rslt = {
         'H': H_generator.rvs(),
@@ -90,12 +85,9 @@ def param_generator(H_generator=truncnorm(-1.2, 8.6, 0.07, 0.05),
     }
     return rslt
 
-
 logging.info("loading K_T data from file")
-logging.info("rows from {} to {}".format(
-    part_id*part_size, (part_id+1)*part_size))
-K_T = pd.read_csv("./data/strike_maturity.csv",
-                  index_col=0).iloc[part_id*part_size:(part_id+1)*part_size, :]
+logging.info("rows from {} to {}".format(part_id*part_size, (part_id+1)*part_size))
+K_T = pd.read_csv("./data/strike_maturity.csv", index_col=0).iloc[part_id*part_size:(part_id+1)*part_size, :]
 
 logging.info("K_T shape: {}".format(K_T.shape))
 
@@ -109,8 +101,7 @@ S0 = 1.
 
 logging.info("start generating data")
 data_nn = K_T.merge(K_T.progress_apply(
-    lambda row: pd.Series(generate_rBergomi_sample(
-        row['Moneyness'], row['Time to Maturity (years)'], param_generator, S0)),
+    lambda row: pd.Series(generate_rBergomi_sample(row['Moneyness'], row['Time to Maturity (years)'], param_generator, S0)), 
     axis=1), left_index=True, right_index=True)
 
 logging.info("data_nn shape: {}".format(data_nn.shape))
@@ -121,5 +112,7 @@ logging.info("dropping nan")
 data_nn.dropna(inplace=True)
 
 logging.info("writing to local file")
-data_nn.to_csv(
-    "./data/rBergomi/labled_data_all_{}.csv".format(part_id), index=False)
+data_nn.to_csv("./data/rBergomi/labled_data_all_{}.csv".format(part_id), index=False)
+
+
+
