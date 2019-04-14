@@ -126,4 +126,4 @@ data_nn.dropna(inplace=True)
 
 logging.info("writing to local file")
 data_nn.to_csv(
-    "./data/rBergomi/labled_data_all_{}_new.csv".format(part_id), index=False)
+    "./data/rBergomi/labeled_data_all_{}_new.csv".format(part_id), index=False)
