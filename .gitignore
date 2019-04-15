@@ -1,6 +1,8 @@
 test.ipynb
 data/*
 *.h5
+rbergomi_generating.py
+!data/SPX_20190409.csv
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
